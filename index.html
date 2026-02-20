@@ -18,7 +18,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-soft);
             color: #1e293b;
-            -webkit-font-smoothing: antialiased;
         }
 
         .catalog-container {
@@ -59,7 +58,6 @@
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
-            background: #f1f5f9;
         }
 
         .data-label {
@@ -82,7 +80,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 2rem;
-            background: #0f172a;
+            background: #f1f5f9;
         }
         
         .slider-track {
@@ -120,8 +118,8 @@
         <!-- Modern Header -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
             <div>
-                <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">Tour Catalog</h1>
-                <p class="text-slate-500 font-medium text-lg">Rayna B2B Portal</p>
+                <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">Tour cataloge</h1>
+                <p class="text-slate-500 font-medium text-lg">Rayna B2B</p>
             </div>
             
             <div class="no-print flex items-center gap-3 bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 w-full md:w-auto">
@@ -131,7 +129,7 @@
                 <input 
                     type="text" 
                     id="searchInput"
-                    placeholder="Search tours..." 
+                    placeholder="Search by tour name..." 
                     class="bg-transparent px-2 py-2 text-base outline-none w-full md:w-80 font-medium"
                 >
             </div>
@@ -147,26 +145,10 @@
             </div>
         </div>
 
-        <!-- States -->
+        <!-- Loading State -->
         <div id="loadingState" class="py-32 text-center">
             <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
-            <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Initializing Multi-Gateway Protocol</p>
-            <p id="proxyStatus" class="text-xs text-slate-400 mt-2 font-mono bg-slate-100 p-2 rounded inline-block"></p>
-        </div>
-
-        <div id="errorState" class="hidden py-32 text-center bg-red-50 rounded-3xl border border-red-100 px-6">
-            <div class="mb-4 bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto shadow-sm border border-red-100">
-                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <p class="text-red-600 font-bold text-xl mb-2">Network Security Restriction</p>
-            <p class="text-red-400 mb-6 max-w-md mx-auto">The Rayna API server rejected the cross-origin request. We have exhausted all 4 fallback gateways.</p>
-            <div class="flex flex-col items-center gap-4">
-                <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Hard Refresh</button>
-                <div class="text-left bg-white p-4 rounded-xl border border-red-100 w-full max-w-lg">
-                    <p class="text-[10px] font-bold text-red-800 uppercase mb-2">Technical Trace:</p>
-                    <p id="errorLog" class="text-[10px] font-mono text-red-400 overflow-x-auto whitespace-pre-wrap"></p>
-                </div>
-            </div>
+            <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Initializing Catalog</p>
         </div>
 
         <!-- Grid -->
@@ -200,7 +182,7 @@
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
         
-        <img id="lightboxImage" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" src="" alt="View">
+        <img id="lightboxImage" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl transition-transform duration-300 transform scale-100 hover:scale-[1.02]" src="" alt="Lightbox View">
         
         <button onclick="moveLightbox(1)" class="absolute right-8 text-white p-4 hover:bg-white/10 rounded-full transition-all">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -212,7 +194,10 @@
     <script>
         const BASE_URL = 'https://sandbox.raynatours.com';
         const IMAGE_CDN = 'https://d1i3enf1i5tb1f.cloudfront.net';
-        const AUTH_TOKEN = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTJlOGU0ZS0zOGQ3LTRjOGMtYjc4YS03MjE4ZWQ0NmFhODIiLCJVc2VySWQiOiI1NDkyMiIsIlVzZXJUeXBlIjoiQWdlbnQiLCJQYXJlbnRJRCI6IjAiLCJFbWFpbElEIjoiYW1pcmo0ampAZ21haWwuY29tIiwiaXNzIjoiaHR0cDovL2RldnJheW5hYXBpLnJheW5hdG91cnMuY29tLyIsImF1ZCI6Imh0dHA6Ly9kZXZyYXluYWFwaS5yYXluYXRvdXJzLmNvbS8ifQ.2GIkNbQ6RO0JZkRPHpLZyUqkNivXlcI1OKSjMs76ufc";
+        const LIST_ENDPOINT = '/api/Tour/tourstaticdata';
+        const DETAIL_ENDPOINT = '/api/Tour/tourStaticDataById';
+        const OPTIONS_ENDPOINT = '/api/Tour/touroptionstaticdata';
+        const authToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTJlOGU0ZS0zOGQ3LTRjOGMtYjc4YS03MjE4ZWQ0NmFhODIiLCJVc2VySWQiOiI1NDkyMiIsIlVzZXJUeXBlIjoiQWdlbnQiLCJQYXJlbnRJRCI6IjAiLCJFbWFpbElEIjoiYW1pcmo0ampAZ21haWwuY29tIiwiaXNzIjoiaHR0cDovL2RldnJheW5hYXBpLnJheW5hdG91cnMuY29tLyIsImF1ZCI6Imh0dHA6Ly9kZXZyYXluYWFwaS5yYXluYXRvdXJzLmNvbS8ifQ.2GIkNbQ6RO0JZkRPHpLZyUqkNivXlcI1OKSjMs76ufc";
 
         const COUNTRY_ID = 13063;
         const CITY_ID = 13668;
@@ -222,118 +207,27 @@
         let currentSlideIndex = 0;
         let activeGalleryImages = [];
 
-        // Advanced Fetch with tiered fallback logic
-        async function secureFetch(endpoint, body) {
-            const statusEl = document.getElementById('proxyStatus');
-            const errorLog = document.getElementById('errorLog');
-            
-            // List of proxies with specific behaviors
-            const proxies = [
-                { url: 'https://api.allorigins.win/raw?url=', type: 'encoded' },
-                { url: 'https://corsproxy.io/?', type: 'encoded' },
-                { url: 'https://thingproxy.freeboard.io/fetch/', type: 'direct' },
-                { url: 'https://proxy.cors.sh/', type: 'direct', headers: { 'x-cors-gratis': 'true' } }
-            ];
-
-            const targetUrl = `${BASE_URL}${endpoint}`;
-            let attempts = [];
-
-            for (let i = 0; i < proxies.length; i++) {
-                const proxy = proxies[i];
-                try {
-                    const proxyDisplay = proxy.url.split('/')[2];
-                    if (statusEl) statusEl.innerText = `[${i+1}/${proxies.length}] Gateway: ${proxyDisplay}`;
-                    
-                    let fullUrl = proxy.type === 'encoded' 
-                        ? proxy.url + encodeURIComponent(targetUrl) 
-                        : proxy.url + targetUrl;
-
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-                    const response = await fetch(fullUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${AUTH_TOKEN}`,
-                            ...(proxy.headers || {})
-                        },
-                        body: JSON.stringify(body),
-                        signal: controller.signal
-                    });
-
-                    clearTimeout(timeoutId);
-
-                    if (!response.ok) {
-                        const errorText = await response.text().catch(() => 'No Body');
-                        throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 50)}`);
-                    }
-
-                    const data = await response.json();
-                    if (data && (data.data || data.result)) {
-                        return data;
-                    } else {
-                        throw new Error("Invalid response structure from API");
-                    }
-
-                } catch (err) {
-                    const msg = `Gateway ${i+1} failed: ${err.message}`;
-                    console.warn(msg);
-                    attempts.push(msg);
-                    if (errorLog) errorLog.innerText = attempts.join('\n');
-                }
-            }
-            throw new Error("All gateways blocked by CORS policy or network restrictions.");
-        }
-
         window.onload = async () => {
-            await loadCatalog();
+            await fetchCatalog();
             setupSearch();
         };
 
-        async function loadCatalog() {
-            try {
-                // Initial diagnostic ping
-                const result = await secureFetch('/api/Tour/tourstaticdata', { 
-                    countryId: COUNTRY_ID, 
-                    cityId: CITY_ID 
-                });
-                
-                catalogData = result.data || result.result || [];
-                
-                if (catalogData.length > 0) {
-                    generateCategoryFilters(catalogData);
-                    renderCatalog(catalogData);
-                    document.getElementById('loadingState').classList.add('hidden');
-                } else {
-                    throw new Error("API returned success but data array was empty.");
-                }
-            } catch (error) {
-                console.error("CATALOG_LOAD_FAILURE:", error);
-                document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('errorState').classList.remove('hidden');
-                const log = document.getElementById('errorLog');
-                if (log.innerText === "") log.innerText = `Final Error: ${error.message}`;
-            }
-        }
-
         function getTourTypeConfig(type) {
             const types = {
-                'Theme Parks': { bg: 'bg-orange-100', text: 'text-orange-700', icon: '🎡' },
-                'Water Parks': { bg: 'bg-blue-100', text: 'text-blue-700', icon: '🌊' },
-                'Adventure': { bg: 'bg-red-100', text: 'text-red-700', icon: '⛰️' },
-                'Sightseeing': { bg: 'bg-emerald-100', text: 'text-emerald-700', icon: '📸' },
-                'Luxury': { bg: 'bg-purple-100', text: 'text-purple-700', icon: '💎' },
-                'Dhow Cruise': { bg: 'bg-indigo-100', text: 'text-indigo-700', icon: '⛵' },
-                'Desert Safari': { bg: 'bg-amber-100', text: 'text-amber-700', icon: '🏜️' }
+                'Theme Parks': { bg: 'bg-orange-100', text: 'text-orange-700', icon: '🎡', border: 'border-orange-200' },
+                'Water Parks': { bg: 'bg-blue-100', text: 'text-blue-700', icon: '🌊', border: 'border-blue-200' },
+                'Adventure': { bg: 'bg-red-100', text: 'text-red-700', icon: '⛰️', border: 'border-red-200' },
+                'Sightseeing': { bg: 'bg-emerald-100', text: 'text-emerald-700', icon: '📸', border: 'border-emerald-200' },
+                'Luxury': { bg: 'bg-purple-100', text: 'text-purple-700', icon: '💎', border: 'border-purple-200' },
+                'Dhow Cruise': { bg: 'bg-indigo-100', text: 'text-indigo-700', icon: '⛵', border: 'border-indigo-200' },
+                'Desert Safari': { bg: 'bg-amber-100', text: 'text-amber-700', icon: '🏜️', border: 'border-amber-200' }
             };
-            return types[type] || { bg: 'bg-slate-100', text: 'text-slate-700', icon: '📍' };
+            return types[type] || { bg: 'bg-slate-100', text: 'text-slate-700', icon: '📍', border: 'border-slate-200' };
         }
 
         function formatTourType(type) {
             const config = getTourTypeConfig(type);
-            return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${config.bg} ${config.text} border border-black/5"><span>${config.icon}</span> ${type || 'Standard'}</span>`;
+            return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${config.bg} ${config.text} border ${config.border}"><span>${config.icon}</span> ${type || 'Standard'}</span>`;
         }
 
         function getFormattedImageUrl(pathOrObj) {
@@ -341,19 +235,35 @@
             let path = typeof pathOrObj === 'string' ? pathOrObj : (pathOrObj.imagePath || pathOrObj.imageUrl || pathOrObj.thumbImage);
             if (!path) return 'https://via.placeholder.com/800x600?text=Path+Undefined';
             let finalUrl = path.startsWith('http') ? path : `${IMAGE_CDN}/${path.replace(/^\//, '')}`;
-            
             if (!finalUrl.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
                 finalUrl = finalUrl.replace(/\/$/, "") + '_L.jpg';
             }
             return finalUrl;
         }
 
+        async function fetchCatalog() {
+    try {
+        const response = await fetch('/.netlify/functions/getTours', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ countryId: COUNTRY_ID, cityId: CITY_ID })
+        });
+        const result = await response.json();
+        catalogData = result.data || result.result || [];
+        generateCategoryFilters(catalogData);
+        renderCatalog(catalogData);
+        document.getElementById('loadingState').classList.add('hidden');
+    } catch (error) {
+        document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">Failed to load catalog.</p>`;
+    }
+}
+
         function generateCategoryFilters(data) {
             const categories = [...new Set(data.map(item => item.cityTourType).filter(Boolean))];
             const filterContainer = document.getElementById('categoryFilter');
             categories.forEach(cat => {
                 const btn = document.createElement('button');
-                btn.className = "cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:border-blue-300";
+                btn.className = "cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:text-blue-600";
                 btn.dataset.category = cat;
                 btn.onclick = () => filterByCategory(cat);
                 btn.innerText = cat;
@@ -364,46 +274,67 @@
         function filterByCategory(cat) {
             currentFilter = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
-                const isActive = btn.dataset.category === cat;
-                btn.className = isActive ? 
-                    "cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" : 
-                    "cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:border-blue-300";
+                if(btn.dataset.category === cat) {
+                    btn.classList.add('bg-slate-900', 'text-white', 'shadow-md', 'border-slate-900');
+                    btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-blue-600');
+                } else {
+                    btn.classList.remove('bg-slate-900', 'text-white', 'shadow-md', 'border-slate-900');
+                    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:text-blue-600');
+                }
             });
             const filtered = cat === 'all' ? catalogData : catalogData.filter(item => item.cityTourType === cat);
             renderCatalog(filtered);
         }
 
+        function findOptionsArray(obj) {
+            if (!obj || typeof obj !== 'object') return null;
+            if (Array.isArray(obj)) {
+                if (obj.length > 0 && (obj[0].optionName || obj[0].optionId)) return obj;
+                for (let item of obj) {
+                    let found = findOptionsArray(item);
+                    if (found) return found;
+                }
+            } else {
+                if (obj.tourOptions && Array.isArray(obj.tourOptions)) return obj.tourOptions;
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        let found = findOptionsArray(obj[key]);
+                        if (found) return found;
+                    }
+                }
+            }
+            return null;
+        }
+
         async function fetchDetail(tourId, contractId = 300) {
             const overlay = document.getElementById('detailOverlay');
             overlay.classList.remove('hidden');
-            document.getElementById('detailContent').innerHTML = `<div class="py-32 text-center"><div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-4 text-xs font-mono text-slate-400">Negotiating Payload Gateway...</p></div>`;
+            document.getElementById('detailContent').innerHTML = `<div class="py-32 text-center"><div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div>`;
             
             try {
-                const detailResult = await secureFetch('/api/Tour/tourStaticDataById', { 
-                    countryId: COUNTRY_ID, 
-                    cityId: CITY_ID, 
-                    tourId, 
-                    contractId, 
-                    travelDate: "2026/01/09" 
-                });
+                const proxyUrl = 'https://corsproxy.io/?';
                 
+                const detailResponse = await fetch(proxyUrl + encodeURIComponent(`${BASE_URL}${DETAIL_ENDPOINT}`), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                    body: JSON.stringify({ countryId: COUNTRY_ID, cityId: CITY_ID, tourId, contractId, travelDate: "2026/01/09" })
+                });
+                const detailResult = await detailResponse.json();
                 let detail = detailResult.data || detailResult.result;
-                const tourDetail = Array.isArray(detail) ? detail[0] : detail;
+                const tourDetail = Array.isArray(detail) ? detail[0] : (detail || detailResult);
 
-                const optionsResult = await secureFetch('/api/Tour/touroptionstaticdata', { 
-                    tourId, 
-                    contractId 
+                const optionsResponse = await fetch(proxyUrl + encodeURIComponent(`${BASE_URL}${OPTIONS_ENDPOINT}`), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                    body: JSON.stringify({ tourId, contractId })
                 });
-                
-                const options = optionsResult.data || optionsResult.result || [];
-                renderDetailContent(tourDetail, options);
+                const optionsResult = await optionsResponse.json();
+                const extractedOptions = findOptionsArray(optionsResult) || [];
+
+                renderDetailContent(tourDetail, extractedOptions);
             } catch (e) {
-                document.getElementById('detailContent').innerHTML = `
-                    <div class="p-20 text-center">
-                        <p class="text-red-500 font-bold mb-4">Request Blocked</p>
-                        <p class="text-slate-400 text-sm mb-6">The detail payload exceeded proxy limits or the server rejected the gateway signature.</p>
-                        <button onclick="closeDetail()" class="bg-slate-900 text-white px-6 py-2 rounded-lg text-sm">Return to Catalog</button>
-                    </div>`;
+                console.error("Fetch Error:", e);
+                document.getElementById('detailContent').innerHTML = `<div class="p-10 text-center text-red-500 font-bold">Error loading details. Please try again.</div>`;
             }
         }
 
@@ -412,17 +343,19 @@
             activeGalleryImages = d.tourImages && d.tourImages.length > 0 ? d.tourImages : [{ imagePath: d.imagePath || d.thumbImage }];
             currentSlideIndex = 0;
 
-            const optionsHtml = options.length > 0 ? options.map((opt, index) => `
-                <div class="flex items-center gap-4 py-4 border-b border-slate-100 last:border-0">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700 font-bold text-sm">
+            const optionsArray = Array.isArray(options) ? options : [];
+
+            const optionsHtml = optionsArray.length > 0 ? optionsArray.map((opt, index) => `
+                <div class="flex items-center gap-4 py-4 ${index !== optionsArray.length - 1 ? 'border-b border-slate-100' : ''}">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700 font-bold text-sm">
                         ${index + 1}
                     </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-800">${opt.optionName}</p>
-                        <p class="text-xs text-slate-400 font-medium">Standard Experience Available</p>
+                    <div class="flex-grow">
+                        <p class="text-lg font-bold text-slate-800">${opt.optionName || 'Experience Option'}</p>
+                        <p class="text-xs text-slate-400 font-medium">${opt.optionDescription ? opt.optionDescription.substring(0, 60) + '...' : 'Available daily'}</p>
                     </div>
                 </div>
-            `).join('') : '<p class="text-slate-400 italic py-6 text-center">Standard options available for this tour.</p>';
+            `).join('') : '<p class="text-slate-400 italic py-6 text-center">No specific options currently listed for this tour.</p>';
 
             content.innerHTML = `
                 <div class="flex flex-col">
@@ -434,51 +367,66 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent pointer-events-none"></div>
                         
                         ${activeGalleryImages.length > 1 ? `
-                        <div class="absolute inset-0 flex items-center justify-between px-6 pointer-events-none">
-                            <button onclick="moveSlide(-1)" class="pointer-events-auto bg-black/30 hover:bg-black/50 text-white p-3 rounded-full backdrop-blur-md">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <div class="absolute inset-0 flex items-center justify-between px-10 pointer-events-none">
+                            <button onclick="moveSlide(-1)" class="pointer-events-auto bg-white/20 hover:bg-white/40 text-white p-4 rounded-full backdrop-blur-md transition-all">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button onclick="moveSlide(1)" class="pointer-events-auto bg-black/30 hover:bg-black/50 text-white p-3 rounded-full backdrop-blur-md">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            <button onclick="moveSlide(1)" class="pointer-events-auto bg-white/20 hover:bg-white/40 text-white p-4 rounded-full backdrop-blur-md transition-all">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
                         ` : ''}
 
-                        <div class="absolute bottom-10 left-10 right-10 pointer-events-none">
-                            <div class="flex gap-3 mb-4">${formatTourType(d.cityTourType)}</div>
-                            <h2 class="text-5xl font-extrabold text-white mb-3 leading-tight">${d.tourName}</h2>
-                            <div class="flex items-center gap-6 text-slate-200 text-base font-medium">
-                                <span>📍 ${d.cityName}</span>
-                                <span>🕒 ${d.duration}</span>
+                        <div class="absolute bottom-12 left-12 right-12 pointer-events-none">
+                            <div class="flex gap-3 mb-6">${formatTourType(d.cityTourType)}</div>
+                            <h2 class="text-6xl font-extrabold text-white mb-4 leading-[1.1]">${d.tourName}</h2>
+                            <div class="flex items-center gap-6 text-slate-200 text-lg font-medium">
+                                <span class="flex items-center gap-2">📍 ${d.cityName}</span>
+                                <span class="flex items-center gap-2">🕒 ${d.duration}</span>
+                                <span class="flex items-center gap-2 text-yellow-400">★ ${d.rating || '5.0'}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        <div class="lg:col-span-2 space-y-12">
-                            <section>
-                                <h3 class="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">Tour Details</h3>
-                                <div class="text-slate-600 leading-relaxed space-y-6 content-rich text-xl">${d.tourDescription || 'Experience details arriving soon.'}</div>
+                    <div class="p-14 grid grid-cols-1 lg:grid-cols-3 gap-16">
+                        <div class="lg:col-span-2 space-y-14">
+                            <section class="bg-white rounded-[32px] p-10 border border-slate-200 shadow-sm">
+                                <h3 class="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
+                                    Tour Options
+                                    <span class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">${(optionsArray.length)}</span>
+                                </h3>
+                                <div class="space-y-1">
+                                    ${optionsHtml}
+                                </div>
                             </section>
 
-                            <section class="bg-blue-50/50 rounded-[32px] p-8 border border-blue-100">
-                                <h3 class="text-xl font-extrabold text-blue-950 mb-6">What's Included</h3>
-                                <div class="text-blue-900 content-rich text-lg">${d.tourInclusion || d.tourInclusions || 'Check tour description for inclusions.'}</div>
+                            <section>
+                                <h3 class="text-2xl font-extrabold text-slate-900 mb-8 border-l-4 border-blue-600 pl-4">Overview</h3>
+                                <div class="text-slate-600 leading-relaxed space-y-6 content-rich text-xl">${d.tourDescription || 'Experience details coming soon.'}</div>
+                            </section>
+
+                            <section class="bg-blue-50/70 rounded-[32px] p-10 border border-blue-100">
+                                <h3 class="text-2xl font-extrabold text-blue-950 mb-8">What's Included</h3>
+                                <div class="text-blue-900 content-rich text-lg">${d.tourInclusion || d.tourInclusions || 'Package features standard inclusions.'}</div>
                             </section>
                         </div>
 
-                        <div class="space-y-8">
-                            <div class="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm">
-                                <h3 class="text-lg font-bold text-slate-900 mb-6">Tour Options</h3>
-                                <div class="space-y-1">${optionsHtml}</div>
-                            </div>
-                            <div class="bg-slate-900 rounded-[32px] p-8 text-white">
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Availability</p>
-                                <p class="text-lg font-bold">Booking open for 2026</p>
-                                <button class="w-full bg-blue-600 mt-6 py-4 rounded-2xl font-bold hover:bg-blue-500 transition-colors">Book Now</button>
+                        <div class="space-y-10">
+                            <div class="bg-slate-50 rounded-[32px] p-10 border border-slate-200 sticky top-12">
+                                <div class="data-label mb-6">Experience Stats</div>
+                                <div class="space-y-6">
+                                    <div class="flex justify-between items-center py-3 border-b border-slate-200">
+                                        <span class="text-slate-500 font-medium">Booking Support</span>
+                                        <span class="font-bold text-slate-900">24/7 Live</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-3 border-b border-slate-200">
+                                        <span class="text-slate-500 font-medium">Primary Language</span>
+                                        <span class="font-bold text-slate-900">${d.tourLanguage || 'English'}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -486,37 +434,85 @@
             `;
         }
 
+        // Lightbox Functions
+        let currentLightboxIdx = 0;
+
+        function openLightbox(idx) {
+            currentLightboxIdx = idx;
+            const lightbox = document.getElementById('lightboxOverlay');
+            updateLightboxUI();
+            lightbox.classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxOverlay').classList.add('hidden');
+        }
+
+        function moveLightbox(dir) {
+            const max = activeGalleryImages.length;
+            currentLightboxIdx = (currentLightboxIdx + dir + max) % max;
+            updateLightboxUI();
+        }
+
+        function updateLightboxUI() {
+            const img = document.getElementById('lightboxImage');
+            const counter = document.getElementById('lightboxCounter');
+            const path = activeGalleryImages[currentLightboxIdx];
+            
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = getFormattedImageUrl(path);
+                img.style.opacity = '1';
+                counter.innerText = `${currentLightboxIdx + 1} / ${activeGalleryImages.length}`;
+            }, 150);
+        }
+
+        function moveSlide(dir) {
+            const track = document.getElementById('sliderTrack');
+            const slides = track.querySelectorAll('.slide');
+            const max = slides.length;
+            if (max <= 1) return;
+            currentSlideIndex = (currentSlideIndex + dir + max) % max;
+            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+        }
+
         function renderCatalog(items) {
             const grid = document.getElementById('catalogGrid');
             const empty = document.getElementById('emptyState');
-            
             if (items.length === 0) {
                 grid.classList.add('hidden');
                 empty.classList.remove('hidden');
                 return;
             }
-            
             empty.classList.add('hidden');
             grid.classList.remove('hidden');
             grid.innerHTML = items.map(item => `
                 <div class="info-card group" onclick="fetchDetail(${item.tourId}, ${item.contractId || 300})">
                     <div class="card-image-container">
-                        <img src="${getFormattedImageUrl(item)}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute top-4 left-4">
+                        <img src="${getFormattedImageUrl(item)}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute top-5 left-5">
                              ${formatTourType(item.cityTourType)}
                         </div>
                     </div>
                     <div class="p-8 flex flex-col flex-grow">
                         <div class="flex-grow">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="flex text-yellow-500 text-xs">★★★★★</div>
+                                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">${item.rating || '5.0'} / 5.0</span>
+                            </div>
                             <h2 class="text-2xl font-extrabold text-slate-900 mb-4 leading-tight group-hover:text-blue-600 transition-colors">${item.tourName}</h2>
                             <div class="flex items-center gap-3 text-slate-500 font-semibold text-sm">
-                                🕒 ${item.duration}
+                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                ${item.duration}
                             </div>
                         </div>
-                        <div class="flex items-center justify-between pt-6 border-t border-slate-100 mt-6">
-                            <span class="text-slate-900 font-bold text-sm uppercase">Explore</span>
-                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                →
+                        <div class="flex items-center justify-between pt-8 border-t border-slate-100 mt-8">
+                            <span class="text-slate-900 font-extrabold text-sm uppercase tracking-wider">Details</span>
+                            <div class="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center transition-all group-hover:bg-blue-600 group-hover:translate-x-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                             </div>
                         </div>
                     </div>
@@ -524,34 +520,7 @@
             `).join('');
         }
 
-        // Lightbox & Slider Utils
-        function openLightbox(idx) {
-            const lb = document.getElementById('lightboxOverlay');
-            const img = document.getElementById('lightboxImage');
-            const count = document.getElementById('lightboxCounter');
-            lbIdx = idx;
-            img.src = getFormattedImageUrl(activeGalleryImages[idx]);
-            count.innerText = `${idx + 1} / ${activeGalleryImages.length}`;
-            lb.classList.remove('hidden');
-        }
-
-        function closeLightbox() { document.getElementById('lightboxOverlay').classList.add('hidden'); }
         function closeDetail() { document.getElementById('detailOverlay').classList.add('hidden'); }
-
-        let lbIdx = 0;
-        function moveLightbox(dir) {
-            const max = activeGalleryImages.length;
-            lbIdx = (lbIdx + dir + max) % max;
-            document.getElementById('lightboxImage').src = getFormattedImageUrl(activeGalleryImages[lbIdx]);
-            document.getElementById('lightboxCounter').innerText = `${lbIdx + 1} / ${activeGalleryImages.length}`;
-        }
-
-        function moveSlide(dir) {
-            const track = document.getElementById('sliderTrack');
-            const max = activeGalleryImages.length;
-            currentSlideIndex = (currentSlideIndex + dir + max) % max;
-            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
-        }
 
         function setupSearch() {
             document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -565,10 +534,18 @@
             });
         }
 
+        // Close lightbox on escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { closeLightbox(); closeDetail(); }
-            if (e.key === 'ArrowRight') moveLightbox(1);
-            if (e.key === 'ArrowLeft') moveLightbox(-1);
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeDetail();
+            }
+            if (e.key === 'ArrowRight' && !document.getElementById('lightboxOverlay').classList.contains('hidden')) {
+                moveLightbox(1);
+            }
+            if (e.key === 'ArrowLeft' && !document.getElementById('lightboxOverlay').classList.contains('hidden')) {
+                moveLightbox(-1);
+            }
         });
     </script>
 </body>
