@@ -1,8 +1,6 @@
 exports.handler = async (event) => {
   try {
-    const response = await fetch(
-      "https://sandbox.raynatours.com/api/Tour/tourstaticdata",
-      {
+    const response = await fetch("/.netlify/functions/rayna", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
