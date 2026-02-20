@@ -151,12 +151,16 @@
         <div id="loadingState" class="py-32 text-center">
             <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
             <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Fetching Data via Secure Proxy</p>
+            <p id="proxyStatus" class="text-xs text-slate-300 mt-2 font-mono"></p>
         </div>
 
         <div id="errorState" class="hidden py-32 text-center bg-red-50 rounded-3xl border border-red-100 px-6">
             <p class="text-red-600 font-bold text-xl mb-2">Connection Issue Detected</p>
             <p class="text-red-400 mb-6 max-w-md mx-auto">The Rayna API is currently unreachable. This often happens if the CORS proxy is overloaded or if the deployment environment is blocking the request. Check the console for specific error codes.</p>
-            <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Retry Connection</button>
+            <div class="flex flex-col items-center gap-4">
+                <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Retry Connection</button>
+                <p id="errorLog" class="text-[10px] font-mono text-red-300 bg-white/50 p-2 rounded-lg max-w-lg"></p>
+            </div>
         </div>
 
         <!-- Grid -->
@@ -212,39 +216,52 @@
         let currentSlideIndex = 0;
         let activeGalleryImages = [];
 
-        // Enhanced Fetch function with multiple proxies for production reliability
+        // Enhanced Fetch function with multiple proxies and robust retry logic
         async function secureFetch(endpoint, body) {
             const proxies = [
                 'https://corsproxy.io/?',
                 'https://api.allorigins.win/raw?url=',
-                'https://thingproxy.freeboard.io/fetch/'
+                'https://thingproxy.freeboard.io/fetch/',
+                'https://proxy.cors.sh/' // Added as a fourth fallback
             ];
 
             const targetUrl = `${BASE_URL}${endpoint}`;
+            const statusEl = document.getElementById('proxyStatus');
             let lastError = null;
 
             for (let proxy of proxies) {
                 try {
-                    const fullUrl = proxy.includes('corsproxy.io') || proxy.includes('allorigins') 
-                        ? proxy + encodeURIComponent(targetUrl)
-                        : proxy + targetUrl;
+                    if (statusEl) statusEl.innerText = `Trying gateway: ${proxy.split('/')[2]}...`;
+                    
+                    let fullUrl = targetUrl;
+                    if (proxy.includes('corsproxy.io') || proxy.includes('allorigins')) {
+                        fullUrl = proxy + encodeURIComponent(targetUrl);
+                    } else {
+                        fullUrl = proxy + targetUrl;
+                    }
                     
                     const response = await fetch(fullUrl, {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json', 
-                            'Authorization': `Bearer ${AUTH_TOKEN}` 
+                            'Authorization': `Bearer ${AUTH_TOKEN}`,
+                            'x-cors-gratis': 'true' // For cors.sh
                         },
-                        body: JSON.stringify(body)
+                        body: JSON.stringify(body),
+                        signal: AbortSignal.timeout(10000) // 10s timeout per proxy
                     });
 
                     if (!response.ok) {
-                        console.error(`Status ${response.status} from proxy ${proxy}`);
+                        const errText = await response.text().catch(() => 'No response body');
+                        console.error(`Status ${response.status} from proxy ${proxy}: ${errText.substring(0, 100)}`);
                         continue;
                     }
                     
                     const data = await response.json();
-                    if (data) return data;
+                    if (data) {
+                        if (statusEl) statusEl.innerText = 'Connection established!';
+                        return data;
+                    }
                 } catch (e) {
                     console.warn(`Proxy ${proxy} failed:`, e.message);
                     lastError = e;
@@ -278,6 +295,7 @@
                 console.error("Critical Load Error:", error);
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('errorLog').innerText = `Reason: ${error.message}`;
             }
         }
 
