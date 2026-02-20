@@ -150,16 +150,22 @@
         <!-- States -->
         <div id="loadingState" class="py-32 text-center">
             <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
-            <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Fetching Data via Secure Proxy</p>
-            <p id="proxyStatus" class="text-xs text-slate-300 mt-2 font-mono"></p>
+            <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Initializing Multi-Gateway Protocol</p>
+            <p id="proxyStatus" class="text-xs text-slate-400 mt-2 font-mono bg-slate-100 p-2 rounded inline-block"></p>
         </div>
 
         <div id="errorState" class="hidden py-32 text-center bg-red-50 rounded-3xl border border-red-100 px-6">
-            <p class="text-red-600 font-bold text-xl mb-2">Connection Issue Detected</p>
-            <p class="text-red-400 mb-6 max-w-md mx-auto">The Rayna API is currently unreachable. This often happens if the CORS proxy is overloaded or if the deployment environment is blocking the request. Check the console for specific error codes.</p>
+            <div class="mb-4 bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto shadow-sm border border-red-100">
+                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <p class="text-red-600 font-bold text-xl mb-2">Network Security Restriction</p>
+            <p class="text-red-400 mb-6 max-w-md mx-auto">The Rayna API server rejected the cross-origin request. We have exhausted all 4 fallback gateways.</p>
             <div class="flex flex-col items-center gap-4">
-                <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Retry Connection</button>
-                <p id="errorLog" class="text-[10px] font-mono text-red-300 bg-white/50 p-2 rounded-lg max-w-lg"></p>
+                <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Hard Refresh</button>
+                <div class="text-left bg-white p-4 rounded-xl border border-red-100 w-full max-w-lg">
+                    <p class="text-[10px] font-bold text-red-800 uppercase mb-2">Technical Trace:</p>
+                    <p id="errorLog" class="text-[10px] font-mono text-red-400 overflow-x-auto whitespace-pre-wrap"></p>
+                </div>
             </div>
         </div>
 
@@ -216,58 +222,69 @@
         let currentSlideIndex = 0;
         let activeGalleryImages = [];
 
-        // Enhanced Fetch function with multiple proxies and robust retry logic
+        // Advanced Fetch with tiered fallback logic
         async function secureFetch(endpoint, body) {
+            const statusEl = document.getElementById('proxyStatus');
+            const errorLog = document.getElementById('errorLog');
+            
+            // List of proxies with specific behaviors
             const proxies = [
-                'https://corsproxy.io/?',
-                'https://api.allorigins.win/raw?url=',
-                'https://thingproxy.freeboard.io/fetch/',
-                'https://proxy.cors.sh/' // Added as a fourth fallback
+                { url: 'https://api.allorigins.win/raw?url=', type: 'encoded' },
+                { url: 'https://corsproxy.io/?', type: 'encoded' },
+                { url: 'https://thingproxy.freeboard.io/fetch/', type: 'direct' },
+                { url: 'https://proxy.cors.sh/', type: 'direct', headers: { 'x-cors-gratis': 'true' } }
             ];
 
             const targetUrl = `${BASE_URL}${endpoint}`;
-            const statusEl = document.getElementById('proxyStatus');
-            let lastError = null;
+            let attempts = [];
 
-            for (let proxy of proxies) {
+            for (let i = 0; i < proxies.length; i++) {
+                const proxy = proxies[i];
                 try {
-                    if (statusEl) statusEl.innerText = `Trying gateway: ${proxy.split('/')[2]}...`;
+                    const proxyDisplay = proxy.url.split('/')[2];
+                    if (statusEl) statusEl.innerText = `[${i+1}/${proxies.length}] Gateway: ${proxyDisplay}`;
                     
-                    let fullUrl = targetUrl;
-                    if (proxy.includes('corsproxy.io') || proxy.includes('allorigins')) {
-                        fullUrl = proxy + encodeURIComponent(targetUrl);
-                    } else {
-                        fullUrl = proxy + targetUrl;
-                    }
-                    
+                    let fullUrl = proxy.type === 'encoded' 
+                        ? proxy.url + encodeURIComponent(targetUrl) 
+                        : proxy.url + targetUrl;
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 12000);
+
                     const response = await fetch(fullUrl, {
                         method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json', 
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
                             'Authorization': `Bearer ${AUTH_TOKEN}`,
-                            'x-cors-gratis': 'true' // For cors.sh
+                            ...(proxy.headers || {})
                         },
                         body: JSON.stringify(body),
-                        signal: AbortSignal.timeout(10000) // 10s timeout per proxy
+                        signal: controller.signal
                     });
 
+                    clearTimeout(timeoutId);
+
                     if (!response.ok) {
-                        const errText = await response.text().catch(() => 'No response body');
-                        console.error(`Status ${response.status} from proxy ${proxy}: ${errText.substring(0, 100)}`);
-                        continue;
+                        const errorText = await response.text().catch(() => 'No Body');
+                        throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 50)}`);
                     }
-                    
+
                     const data = await response.json();
-                    if (data) {
-                        if (statusEl) statusEl.innerText = 'Connection established!';
+                    if (data && (data.data || data.result)) {
                         return data;
+                    } else {
+                        throw new Error("Invalid response structure from API");
                     }
-                } catch (e) {
-                    console.warn(`Proxy ${proxy} failed:`, e.message);
-                    lastError = e;
+
+                } catch (err) {
+                    const msg = `Gateway ${i+1} failed: ${err.message}`;
+                    console.warn(msg);
+                    attempts.push(msg);
+                    if (errorLog) errorLog.innerText = attempts.join('\n');
                 }
             }
-            throw lastError || new Error("Connection failed across all available gateways.");
+            throw new Error("All gateways blocked by CORS policy or network restrictions.");
         }
 
         window.onload = async () => {
@@ -277,6 +294,7 @@
 
         async function loadCatalog() {
             try {
+                // Initial diagnostic ping
                 const result = await secureFetch('/api/Tour/tourstaticdata', { 
                     countryId: COUNTRY_ID, 
                     cityId: CITY_ID 
@@ -289,13 +307,14 @@
                     renderCatalog(catalogData);
                     document.getElementById('loadingState').classList.add('hidden');
                 } else {
-                    throw new Error("API returned an empty data set.");
+                    throw new Error("API returned success but data array was empty.");
                 }
             } catch (error) {
-                console.error("Critical Load Error:", error);
+                console.error("CATALOG_LOAD_FAILURE:", error);
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('errorState').classList.remove('hidden');
-                document.getElementById('errorLog').innerText = `Reason: ${error.message}`;
+                const log = document.getElementById('errorLog');
+                if (log.innerText === "") log.innerText = `Final Error: ${error.message}`;
             }
         }
 
@@ -357,7 +376,7 @@
         async function fetchDetail(tourId, contractId = 300) {
             const overlay = document.getElementById('detailOverlay');
             overlay.classList.remove('hidden');
-            document.getElementById('detailContent').innerHTML = `<div class="py-32 text-center"><div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div>`;
+            document.getElementById('detailContent').innerHTML = `<div class="py-32 text-center"><div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-4 text-xs font-mono text-slate-400">Negotiating Payload Gateway...</p></div>`;
             
             try {
                 const detailResult = await secureFetch('/api/Tour/tourStaticDataById', { 
@@ -379,7 +398,12 @@
                 const options = optionsResult.data || optionsResult.result || [];
                 renderDetailContent(tourDetail, options);
             } catch (e) {
-                document.getElementById('detailContent').innerHTML = `<div class="p-10 text-center text-red-500 font-bold">Error loading details. API may be rate limited.</div>`;
+                document.getElementById('detailContent').innerHTML = `
+                    <div class="p-20 text-center">
+                        <p class="text-red-500 font-bold mb-4">Request Blocked</p>
+                        <p class="text-slate-400 text-sm mb-6">The detail payload exceeded proxy limits or the server rejected the gateway signature.</p>
+                        <button onclick="closeDetail()" class="bg-slate-900 text-white px-6 py-2 rounded-lg text-sm">Return to Catalog</button>
+                    </div>`;
             }
         }
 
