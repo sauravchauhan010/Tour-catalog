@@ -153,10 +153,10 @@
             <p class="text-slate-400 font-bold text-sm tracking-widest uppercase">Fetching Data via Secure Proxy</p>
         </div>
 
-        <div id="errorState" class="hidden py-32 text-center bg-red-50 rounded-3xl border border-red-100">
-            <p class="text-red-600 font-bold text-xl mb-2">Connection Issue</p>
-            <p class="text-red-400 mb-6">Unable to connect to the Rayna API. This usually happens due to browser security or expired tokens.</p>
-            <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold">Retry Connection</button>
+        <div id="errorState" class="hidden py-32 text-center bg-red-50 rounded-3xl border border-red-100 px-6">
+            <p class="text-red-600 font-bold text-xl mb-2">Connection Issue Detected</p>
+            <p class="text-red-400 mb-6 max-w-md mx-auto">The Rayna API is currently unreachable. This often happens if the CORS proxy is overloaded or if the deployment environment is blocking the request. Check the console for specific error codes.</p>
+            <button onclick="window.location.reload()" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg">Retry Connection</button>
         </div>
 
         <!-- Grid -->
@@ -212,18 +212,22 @@
         let currentSlideIndex = 0;
         let activeGalleryImages = [];
 
-        // Primary Fetch function with fallback proxy logic
+        // Enhanced Fetch function with multiple proxies for production reliability
         async function secureFetch(endpoint, body) {
-            // We use different proxies because some get blocked by production environments like Netlify/GitHub
             const proxies = [
                 'https://corsproxy.io/?',
-                'https://api.allorigins.win/raw?url='
+                'https://api.allorigins.win/raw?url=',
+                'https://thingproxy.freeboard.io/fetch/'
             ];
+
+            const targetUrl = `${BASE_URL}${endpoint}`;
+            let lastError = null;
 
             for (let proxy of proxies) {
                 try {
-                    const targetUrl = `${BASE_URL}${endpoint}`;
-                    const fullUrl = proxy + encodeURIComponent(targetUrl);
+                    const fullUrl = proxy.includes('corsproxy.io') || proxy.includes('allorigins') 
+                        ? proxy + encodeURIComponent(targetUrl)
+                        : proxy + targetUrl;
                     
                     const response = await fetch(fullUrl, {
                         method: 'POST',
@@ -234,14 +238,19 @@
                         body: JSON.stringify(body)
                     });
 
-                    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                    if (!response.ok) {
+                        console.error(`Status ${response.status} from proxy ${proxy}`);
+                        continue;
+                    }
                     
-                    return await response.json();
+                    const data = await response.json();
+                    if (data) return data;
                 } catch (e) {
-                    console.warn(`Proxy ${proxy} failed, trying next...`, e);
+                    console.warn(`Proxy ${proxy} failed:`, e.message);
+                    lastError = e;
                 }
             }
-            throw new Error("All proxies failed to fetch data.");
+            throw lastError || new Error("Connection failed across all available gateways.");
         }
 
         window.onload = async () => {
@@ -263,7 +272,7 @@
                     renderCatalog(catalogData);
                     document.getElementById('loadingState').classList.add('hidden');
                 } else {
-                    throw new Error("Empty data returned");
+                    throw new Error("API returned an empty data set.");
                 }
             } catch (error) {
                 console.error("Critical Load Error:", error);
@@ -295,7 +304,7 @@
             let path = typeof pathOrObj === 'string' ? pathOrObj : (pathOrObj.imagePath || pathOrObj.imageUrl || pathOrObj.thumbImage);
             if (!path) return 'https://via.placeholder.com/800x600?text=Path+Undefined';
             let finalUrl = path.startsWith('http') ? path : `${IMAGE_CDN}/${path.replace(/^\//, '')}`;
-            // Correct for missing extension in some Rayna responses
+            
             if (!finalUrl.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
                 finalUrl = finalUrl.replace(/\/$/, "") + '_L.jpg';
             }
