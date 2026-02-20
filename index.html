@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Tour Catalog | Rayna B2B</title>
+    <title>Rayna B2B | Tour Catalog</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -18,7 +18,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-soft);
             color: #1e293b;
-            scroll-behavior: smooth;
         }
 
         .catalog-container {
@@ -27,501 +26,228 @@
             padding: 2.5rem 1.5rem;
         }
 
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(252, 253, 254, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .sticky-header.scrolled {
-            border-bottom-color: #e2e8f0;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
-
-        .category-flex-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
         .info-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.3s ease;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
             overflow: hidden;
-            position: relative;
         }
 
         .info-card:hover {
-            transform: translateY(-12px);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             border-color: #dbeafe;
-            box-shadow: 0 30px 45px -15px rgba(37, 99, 235, 0.12);
         }
 
-        .card-image-container {
-            width: 100%;
-            height: 260px;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
+        #detailOverlay {
+            backdrop-filter: blur(12px);
+            background-color: rgba(15, 23, 42, 0.9);
         }
 
-        .data-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #94a3b8;
+        .loader {
+            border-top-color: #2563eb;
+            animation: spinner 0.6s linear infinite;
         }
 
-        #detailOverlay, #lightboxOverlay {
-            backdrop-filter: blur(24px);
-            background-color: rgba(2, 6, 23, 0.88);
-        }
-
-        .content-rich ul { list-style-type: none; }
-        .content-rich li { 
-            position: relative; 
-            padding-left: 1.5rem; 
-            margin-bottom: 0.75rem;
-        }
-        .content-rich li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .slider-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 2.5rem;
-            background: #0f172a;
-        }
-        
-        .slider-track {
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .slide {
-            flex: 0 0 100%;
-            height: 600px;
-            cursor: zoom-in;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.9;
-            transition: all 0.6s ease;
-        }
-
-        .slide:hover img {
-            transform: scale(1.05);
-            opacity: 1;
-        }
-
-        .cat-btn {
-            white-space: nowrap;
-        }
-
-        /* Hide scrollbar but allow functionality */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        @media (max-width: 768px) {
-            .slide { height: 400px; }
-            .catalog-container { padding: 1.5rem 1rem; }
-        }
-
-        @media print {
-            .no-print { display: none; }
-            body { background: white; }
-            .catalog-container { width: 100%; padding: 0; }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
     <div class="catalog-container">
-        <!-- Sticky Header with Navigation -->
-        <header id="mainHeader" class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 transition-all duration-300">
-            <div>
-                <div class="flex items-center gap-3 mb-1">
-                    <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-tighter uppercase">Global</span>
-                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Explore Tours</h1>
-                </div>
-                <p class="text-slate-400 font-semibold text-sm tracking-wide">RAYNA B2B PARTNER CATALOG</p>
-            </div>
+        <header class="mb-12">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Experience Catalog</h1>
+            <p class="text-slate-500 font-medium">Official Rayna B2B Partner Portal</p>
             
-            <div class="no-print flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-200 w-full md:w-auto">
-                <div class="pl-4 text-slate-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
+            <div class="mt-8 flex flex-col md:flex-row gap-4">
                 <input 
                     type="text" 
                     id="searchInput"
-                    placeholder="Search destinations or activities..." 
-                    class="bg-transparent px-2 py-2.5 text-base outline-none w-full md:w-72 font-medium placeholder:text-slate-300"
+                    placeholder="Search tours..." 
+                    class="bg-white border border-slate-200 px-6 py-3 rounded-2xl w-full md:w-96 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 >
+                <div id="categoryFilter" class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                    <button onclick="filterByCategory('all')" class="cat-btn whitespace-nowrap px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold text-sm" data-category="all">All</button>
+                </div>
             </div>
         </header>
 
-        <!-- Category Filters -->
-        <div class="no-print mb-12">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Filter Experience</h3>
-                <span id="resultCount" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">0 Tours Found</span>
-            </div>
-            <div class="category-flex-container no-scrollbar overflow-x-auto pb-2" id="categoryFilter">
-                <button onclick="filterByCategory('all')" class="cat-btn px-6 py-3 rounded-2xl text-sm font-bold transition-all bg-slate-900 text-white shadow-lg shadow-slate-200 border border-slate-900" data-category="all">
-                    All Experiences
-                </button>
-            </div>
+        <!-- Status Messaging -->
+        <div id="statusMessage" class="hidden mb-8 p-4 rounded-2xl text-center font-bold"></div>
+
+        <div id="loadingState" class="py-20 text-center">
+            <div class="loader w-12 h-12 border-4 border-slate-200 rounded-full inline-block"></div>
+            <p class="mt-4 text-slate-400 font-bold text-sm tracking-widest uppercase">Fetching Live Data...</p>
         </div>
 
-        <!-- Loading State -->
-        <div id="loadingState" class="py-40 text-center">
-            <div class="relative inline-block w-16 h-16">
-                <div class="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-            <p class="mt-8 text-slate-400 font-bold text-xs tracking-[0.3em] uppercase">Sourcing Best Rates</p>
-        </div>
-
-        <!-- Grid -->
-        <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 md:gap-10"></div>
-
-        <div id="emptyState" class="hidden py-40 text-center bg-white rounded-[40px] border border-dashed border-slate-200">
-            <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <p class="text-slate-900 font-extrabold text-2xl mb-2">No results found</p>
-            <p class="text-slate-400 font-medium">Try different keywords or browse all categories.</p>
-        </div>
+        <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </div>
 
-    <!-- Detail Overlay -->
-    <div id="detailOverlay" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-        <div class="min-h-screen flex items-center justify-center p-0 md:p-8">
-            <div class="bg-white rounded-none md:rounded-[48px] w-full max-w-7xl shadow-2xl relative overflow-hidden border border-slate-200">
-                <button onclick="closeDetail()" class="fixed md:absolute top-6 right-6 bg-white/10 text-white p-4 rounded-full hover:bg-red-500 transition-all z-[120] backdrop-blur-xl border border-white/20">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div id="detailContent"></div>
-            </div>
+    <!-- Detail View -->
+    <div id="detailOverlay" class="fixed inset-0 z-50 hidden overflow-y-auto p-4 md:p-10">
+        <div class="bg-white max-w-5xl mx-auto rounded-[32px] overflow-hidden shadow-2xl relative">
+            <button onclick="closeDetail()" class="absolute top-6 right-6 z-10 bg-black/20 hover:bg-red-500 text-white p-3 rounded-full backdrop-blur-md transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="detailContent"></div>
         </div>
-    </div>
-
-    <!-- Lightbox Overlay -->
-    <div id="lightboxOverlay" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-white p-4 hover:bg-white/10 rounded-full transition-all">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        
-        <button onclick="moveLightbox(-1)" class="absolute left-4 md:left-8 text-white p-4 hover:bg-white/10 rounded-full transition-all">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-        </button>
-        
-        <img id="lightboxImage" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl transition-all duration-500" src="" alt="Gallery Preview">
-        
-        <button onclick="moveLightbox(1)" class="absolute right-4 md:right-8 text-white p-4 hover:bg-white/10 rounded-full transition-all">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </button>
-        
-        <div class="absolute bottom-10 px-6 py-2 bg-white/10 backdrop-blur-md rounded-full text-white/90 font-mono text-xs tracking-widest" id="lightboxCounter"></div>
     </div>
 
     <script>
-        const BASE_URL = 'https://sandbox.raynatours.com';
-        const IMAGE_CDN = 'https://d1i3enf1i5tb1f.cloudfront.net';
-        const LIST_ENDPOINT = '/api/Tour/tourstaticdata';
-        const DETAIL_ENDPOINT = '/api/Tour/tourStaticDataById';
-        const OPTIONS_ENDPOINT = '/api/Tour/touroptionstaticdata';
-        const authToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTJlOGU0ZS0zOGQ3LTRjOGMtYjc4YS03MjE4ZWQ0NmFhODIiLCJVc2VySWQiOiI1NDkyMiIsIlVzZXJUeXBlIjoiQWdlbnQiLCJQYXJlbnRJRCI6IjAiLCJFbWFpbElEIjoiYW1pcmo0ampAZ21haWwuY29tIiwiaXNzIjoiaHR0cDovL2RldnJheW5hYXBpLnJheW5hdG91cnMuY29tLyIsImF1ZCI6Imh0dHA6Ly9kZXZyYXluYWFwaS5yYXluYXRvdXJzLmNvbS8ifQ.2GIkNbQ6RO0JZkRPHpLZyUqkNivXlcI1OKSjMs76ufc";
-
-        const COUNTRY_ID = 13063;
-        const CITY_ID = 13668;
+        // CONFIGURATION
+        const API_KEY = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTJlOGU0ZS0zOGQ3LTRjOGMtYjc4YS03MjE4ZWQ0NmFhODIiLCJVc2VySWQiOiI1NDkyMiIsIlVzZXJUeXBlIjoiQWdlbnQiLCJQYXJlbnRJRCI6IjAiLCJFbWFpbElEIjoiYW1pcmo0ampAZ21haWwuY29tIiwiaXNzIjoiaHR0cDovL2RldnJheW5hYXBpLnJheW5hdG91cnMuY29tLyIsImF1ZCI6Imh0dHA6Ly9kZXZyYXluYWFwaS5yYXluYXRvdXJzLmNvbS8ifQ.2GIkNbQ6RO0JZkRPHpLZyUqkNivXlcI1OKSjMs76ufc";
+        const ENDPOINT = "https://sandbox.raynatours.com/api/Tour/tourstaticdata";
+        const DETAIL_ENDPOINT = "https://sandbox.raynatours.com/api/Tour/tourStaticDataById";
+        
+        // CORS Proxies (Multiple options in case one is down)
+        const PROXIES = [
+            'https://corsproxy.io/?',
+            'https://api.allorigins.win/raw?url='
+        ];
 
         let catalogData = [];
         let currentFilter = 'all';
-        let currentSlideIndex = 0;
-        let activeGalleryImages = [];
 
-        window.onload = async () => {
-            await fetchCatalog();
-            setupSearch();
-            setupScrollEffect();
-        };
+        window.onload = () => fetchData();
 
-        function setupScrollEffect() {
-            const header = document.getElementById('mainHeader');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('sticky-header', 'scrolled');
-                } else {
-                    header.classList.remove('sticky-header', 'scrolled');
-                }
-            });
-        }
-
-        function getTourTypeConfig(type) {
-            const types = {
-                'Theme Parks': { bg: 'bg-orange-50', text: 'text-orange-600', icon: '🎡', border: 'border-orange-100' },
-                'Water Parks': { bg: 'bg-blue-50', text: 'text-blue-600', icon: '🌊', border: 'border-blue-100' },
-                'Adventure': { bg: 'bg-rose-50', text: 'text-rose-600', icon: '⛰️', border: 'border-rose-100' },
-                'Sightseeing': { bg: 'bg-emerald-50', text: 'text-emerald-600', icon: '📸', border: 'border-emerald-100' },
-                'Luxury': { bg: 'bg-violet-50', text: 'text-violet-600', icon: '💎', border: 'border-violet-100' },
-                'Dhow Cruise': { bg: 'bg-indigo-50', text: 'text-indigo-600', icon: '⛵', border: 'border-indigo-100' },
-                'Desert Safari': { bg: 'bg-amber-50', text: 'text-amber-600', icon: '🏜️', border: 'border-amber-100' }
-            };
-            return types[type] || { bg: 'bg-slate-50', text: 'text-slate-600', icon: '📍', border: 'border-slate-100' };
-        }
-
-        function formatTourType(type) {
-            const config = getTourTypeConfig(type);
-            return `<span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${config.bg} ${config.text} border ${config.border} backdrop-blur-sm"><span>${config.icon}</span> ${type || 'Standard'}</span>`;
-        }
-
-        function getFormattedImageUrl(pathOrObj) {
-            if (!pathOrObj) return 'https://via.placeholder.com/800x600?text=Asset+Missing';
-            let path = typeof pathOrObj === 'string' ? pathOrObj : (pathOrObj.imagePath || pathOrObj.imageUrl || pathOrObj.thumbImage);
-            if (!path) return 'https://via.placeholder.com/800x600?text=Path+Undefined';
-            let finalUrl = path.startsWith('http') ? path : `${IMAGE_CDN}/${path.replace(/^\//, '')}`;
-            if (!finalUrl.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                finalUrl = finalUrl.replace(/\/$/, "") + '_L.jpg';
+        async function fetchData(proxyIndex = 0) {
+            if (proxyIndex >= PROXIES.length) {
+                showError("CORS Error: All proxy attempts failed. The API might be blocking these requests.");
+                return;
             }
-            return finalUrl;
-        }
 
-        async function fetchCatalog() {
             try {
-                const proxyUrl = 'https://corsproxy.io/?';
-                const targetUrl = `${BASE_URL}${LIST_ENDPOINT}`;
-                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+                const targetUrl = `${PROXIES[proxyIndex]}${encodeURIComponent(ENDPOINT)}`;
+                const response = await fetch(targetUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-                    body: JSON.stringify({ countryId: COUNTRY_ID, cityId: CITY_ID })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ countryId: 13063, cityId: 13668 })
                 });
+
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
                 const result = await response.json();
                 catalogData = result.data || result.result || [];
-                generateCategoryFilters(catalogData);
-                renderCatalog(catalogData);
-                document.getElementById('loadingState').classList.add('hidden');
-            } catch (error) {
-                document.getElementById('loadingState').innerHTML = `<p class="text-rose-500 font-bold">Unable to reach servers. Please check your connection.</p>`;
+                
+                if (catalogData.length === 0) {
+                    showError("No data returned from API. Check if the CityID is correct.");
+                } else {
+                    initApp();
+                }
+
+            } catch (err) {
+                console.warn(`Proxy ${proxyIndex} failed, trying next...`, err);
+                fetchData(proxyIndex + 1);
             }
         }
 
-        function generateCategoryFilters(data) {
-            const categories = [...new Set(data.map(item => item.cityTourType).filter(Boolean))];
-            const filterContainer = document.getElementById('categoryFilter');
-            categories.forEach(cat => {
+        function initApp() {
+            document.getElementById('loadingState').classList.add('hidden');
+            generateCategories();
+            renderGrid(catalogData);
+            setupSearch();
+        }
+
+        function generateCategories() {
+            const cats = [...new Set(catalogData.map(item => item.cityTourType).filter(Boolean))];
+            const container = document.getElementById('categoryFilter');
+            cats.forEach(cat => {
                 const btn = document.createElement('button');
-                btn.className = "cat-btn px-6 py-3 rounded-2xl text-sm font-bold transition-all bg-white text-slate-500 border border-slate-100 hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50/30";
-                btn.dataset.category = cat;
-                btn.onclick = () => filterByCategory(cat);
+                btn.className = "cat-btn whitespace-nowrap px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-sm transition-all hover:bg-slate-50";
                 btn.innerText = cat;
-                filterContainer.appendChild(btn);
+                btn.onclick = () => filterByCategory(cat);
+                btn.dataset.category = cat;
+                container.appendChild(btn);
             });
         }
 
         function filterByCategory(cat) {
             currentFilter = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                if(btn.dataset.category === cat) {
-                    btn.classList.add('bg-slate-900', 'text-white', 'shadow-lg', 'border-slate-900', 'shadow-slate-200');
-                    btn.classList.remove('bg-white', 'text-slate-500', 'border-slate-100', 'hover:bg-blue-50/30');
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                if(b.dataset.category === cat) {
+                    b.classList.replace('bg-white', 'bg-slate-900');
+                    b.classList.replace('text-slate-600', 'text-white');
                 } else {
-                    btn.classList.remove('bg-slate-900', 'text-white', 'shadow-lg', 'border-slate-900', 'shadow-slate-200');
-                    btn.classList.add('bg-white', 'text-slate-500', 'border-slate-100');
+                    b.classList.replace('bg-slate-900', 'bg-white');
+                    b.classList.replace('text-white', 'text-slate-600');
                 }
             });
-            const filtered = cat === 'all' ? catalogData : catalogData.filter(item => item.cityTourType === cat);
-            renderCatalog(filtered);
+            const filtered = cat === 'all' ? catalogData : catalogData.filter(i => i.cityTourType === cat);
+            renderGrid(filtered);
         }
 
-        async function fetchDetail(tourId, contractId = 300) {
-            const overlay = document.getElementById('detailOverlay');
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('detailContent').innerHTML = `
-                <div class="py-40 text-center">
-                    <div class="inline-block w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-4 text-slate-400 font-bold text-xs uppercase tracking-widest">Loading Details</p>
-                </div>`;
-            
-            try {
-                const proxyUrl = 'https://corsproxy.io/?';
-                const detailResponse = await fetch(proxyUrl + encodeURIComponent(`${BASE_URL}${DETAIL_ENDPOINT}`), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-                    body: JSON.stringify({ countryId: COUNTRY_ID, cityId: CITY_ID, tourId, contractId, travelDate: "2026/01/09" })
-                });
-                const detailResult = await detailResponse.json();
-                let detail = detailResult.data || detailResult.result;
-                const tourDetail = Array.isArray(detail) ? detail[0] : (detail || detailResult);
-
-                const optionsResponse = await fetch(proxyUrl + encodeURIComponent(`${BASE_URL}${OPTIONS_ENDPOINT}`), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-                    body: JSON.stringify({ tourId, contractId })
-                });
-                const optionsResult = await optionsResponse.json();
-                const extractedOptions = findOptionsArray(optionsResult) || [];
-
-                renderDetailContent(tourDetail, extractedOptions);
-            } catch (e) {
-                document.getElementById('detailContent').innerHTML = `<div class="p-20 text-center text-rose-500 font-bold">Failed to load experience details. Please try again.</div>`;
-            }
-        }
-
-        function findOptionsArray(obj) {
-            if (!obj || typeof obj !== 'object') return null;
-            if (Array.isArray(obj)) {
-                if (obj.length > 0 && (obj[0].optionName || obj[0].optionId)) return obj;
-                for (let item of obj) {
-                    let found = findOptionsArray(item);
-                    if (found) return found;
-                }
-            } else {
-                if (obj.tourOptions && Array.isArray(obj.tourOptions)) return obj.tourOptions;
-                for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        let found = findOptionsArray(obj[key]);
-                        if (found) return found;
-                    }
-                }
-            }
-            return null;
-        }
-
-        function renderDetailContent(d, options) {
-            const content = document.getElementById('detailContent');
-            activeGalleryImages = d.tourImages && d.tourImages.length > 0 ? d.tourImages : [{ imagePath: d.imagePath || d.thumbImage }];
-            currentSlideIndex = 0;
-
-            const optionsArray = Array.isArray(options) ? options : [];
-            const optionsHtml = optionsArray.length > 0 ? optionsArray.map((opt, index) => `
-                <div class="flex items-start gap-5 py-6 ${index !== optionsArray.length - 1 ? 'border-b border-slate-100' : ''} group">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 font-black text-sm border border-slate-100 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
-                        ${(index + 1).toString().padStart(2, '0')}
+        function renderGrid(items) {
+            const grid = document.getElementById('catalogGrid');
+            grid.innerHTML = items.map(item => `
+                <div class="info-card" onclick="fetchDetail(${item.tourId})">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://d1i3enf1i5tb1f.cloudfront.net/${item.thumbImage || item.imagePath}" class="w-full h-full object-cover">
                     </div>
-                    <div>
-                        <p class="text-xl font-extrabold text-slate-900 mb-1">${opt.optionName || 'Standard Experience'}</p>
-                        <p class="text-sm text-slate-500 leading-relaxed">${opt.optionDescription ? opt.optionDescription.replace(/<[^>]*>/g, '').substring(0, 100) + '...' : 'Premium access and guided support included with this package option.'}</p>
+                    <div class="p-6">
+                        <span class="text-[10px] font-black uppercase text-blue-600 tracking-widest">${item.cityTourType || 'Tour'}</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-2 mb-4 leading-tight">${item.tourName}</h3>
+                        <div class="flex items-center justify-between text-slate-400 text-sm font-bold">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ${item.duration}
+                            </span>
+                            <span class="text-slate-900">View →</span>
+                        </div>
                     </div>
                 </div>
-            `).join('') : '<div class="py-12 text-center text-slate-400 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">Standard entry conditions apply</div>';
+            `).join('');
+        }
 
-            content.innerHTML = `
-                <div class="flex flex-col">
-                    <div class="relative slider-container">
-                        <div class="slider-track" id="sliderTrack">
-                            ${activeGalleryImages.map((img, idx) => `
-                                <div class="slide" onclick="openLightbox(${idx})">
-                                    <img src="${getFormattedImageUrl(img)}" />
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none"></div>
-                        
-                        ${activeGalleryImages.length > 1 ? `
-                        <div class="absolute top-1/2 left-0 right-0 flex items-center justify-between px-6 -translate-y-1/2 pointer-events-none">
-                            <button onclick="moveSlide(-1)" class="pointer-events-auto bg-white/10 hover:bg-white text-slate-900 p-4 rounded-full backdrop-blur-xl border border-white/20 transition-all hover:scale-110">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-                            <button onclick="moveSlide(1)" class="pointer-events-auto bg-white/10 hover:bg-white text-slate-900 p-4 rounded-full backdrop-blur-xl border border-white/20 transition-all hover:scale-110">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </button>
-                        </div>
-                        ` : ''}
+        async function fetchDetail(tourId) {
+            const overlay = document.getElementById('detailOverlay');
+            overlay.classList.remove('hidden');
+            document.getElementById('detailContent').innerHTML = `<div class="p-20 text-center"><div class="loader w-10 h-10 border-4 border-slate-200 rounded-full inline-block"></div></div>`;
+            
+            try {
+                const targetUrl = `${PROXIES[0]}${encodeURIComponent(DETAIL_ENDPOINT)}`;
+                const response = await fetch(targetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ tourId, contractId: 300, travelDate: "2026-03-01" })
+                });
+                const res = await response.json();
+                const d = res.data || res.result;
+                const tour = Array.isArray(d) ? d[0] : d;
+                
+                renderDetail(tour);
+            } catch (e) {
+                showError("Failed to load details. Proxy might be blocked.");
+            }
+        }
 
-                        <div class="absolute bottom-12 left-8 md:left-16 right-8 md:right-16 pointer-events-none">
-                            <div class="flex gap-3 mb-6 animate-fade-in">${formatTourType(d.cityTourType)}</div>
-                            <h2 class="text-4xl md:text-7xl font-extrabold text-white mb-6 leading-[1.05] tracking-tight">${d.tourName}</h2>
-                            <div class="flex flex-wrap items-center gap-x-8 gap-y-4 text-white/80 text-sm md:text-lg font-bold">
-                                <span class="flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-                                    ${d.cityName}
-                                </span>
-                                <span class="flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-                                    ${d.duration}
-                                </span>
-                                <span class="flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                    ${d.rating || '5.0'} / 5.0
-                                </span>
-                            </div>
-                        </div>
+        function renderDetail(t) {
+            document.getElementById('detailContent').innerHTML = `
+                <div class="relative h-96">
+                    <img src="https://d1i3enf1i5tb1f.cloudfront.net/${t.imagePath || t.thumbImage}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-10">
+                        <h2 class="text-4xl font-black text-white">${t.tourName}</h2>
                     </div>
-
-                    <div class="p-8 md:p-16 grid grid-cols-1 lg:grid-cols-3 gap-16">
-                        <div class="lg:col-span-2 space-y-20">
-                            <section>
-                                <h3 class="text-3xl font-extrabold text-slate-900 mb-8 border-l-[6px] border-blue-600 pl-6">Experience Overview</h3>
-                                <div class="text-slate-600 leading-relaxed space-y-6 content-rich text-lg font-medium">${d.tourDescription || 'Comprehensive details for this experience are currently being updated.'}</div>
-                            </section>
-
-                            <section class="bg-slate-50 rounded-[40px] p-10 border border-slate-100">
-                                <div class="flex items-center justify-between mb-10">
-                                    <h3 class="text-2xl font-extrabold text-slate-900">Available Packages</h3>
-                                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">${optionsArray.length} Variations</span>
-                                </div>
-                                <div class="space-y-2">
-                                    ${optionsHtml}
-                                </div>
-                            </section>
-
-                            <section class="bg-blue-600 rounded-[40px] p-12 text-white shadow-2xl shadow-blue-200">
-                                <h3 class="text-3xl font-extrabold mb-8 flex items-center gap-4">
-                                    <svg class="w-10 h-10 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Included in Package
-                                </h3>
-                                <div class="text-blue-50 content-rich text-xl leading-relaxed font-medium">
-                                    ${d.tourInclusion || d.tourInclusions || 'Standard facility access and basic amenities included.'}
-                                </div>
-                            </section>
+                </div>
+                <div class="p-10">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div class="md:col-span-2">
+                            <h4 class="text-xl font-bold mb-4">About this experience</h4>
+                            <div class="text-slate-600 leading-relaxed">${t.tourDescription || 'No description available.'}</div>
                         </div>
-
-                        <div class="space-y-12">
-                            <div class="bg-white rounded-[40px] p-10 border border-slate-200 shadow-xl shadow-slate-100 sticky top-24">
-                                <div class="data-label mb-8">Vital Information</div>
-                                <div class="space-y-8">
-                                    <div class="group">
-                                        <p class="text-slate-400 text-xs font-bold uppercase mb-2 tracking-widest">Support Policy</p>
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-slate-900 font-extrabold text-lg">Instant Support</span>
-                                            <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-black uppercase">Live</span>
-                                        </div>
-                                    </div>
-                                    <div class="group">
-                                        <p class="text-slate-400 text-xs font-bold uppercase mb-2 tracking-widest">Operating Language</p>
-                                        <p class="text-slate-900 font-extrabold text-lg">${d.tourLanguage || 'English'}</p>
-                                    </div>
-                                    <div class="group">
-                                        <p class="text-slate-400 text-xs font-bold uppercase mb-2 tracking-widest">Pricing Policy</p>
-                                        <p class="text-slate-900 font-extrabold text-lg">B2B Special Rates</p>
-                                    </div>
-                                    <button class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
-                                        Check Availability
-                                    </button>
-                                </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl h-fit">
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Quick Details</p>
+                            <div class="space-y-4 font-bold text-slate-800">
+                                <div class="flex justify-between"><span>Duration</span><span>${t.duration}</span></div>
+                                <div class="flex justify-between"><span>City</span><span>${t.cityName}</span></div>
+                                <div class="flex justify-between"><span>Language</span><span>${t.tourLanguage || 'English'}</span></div>
                             </div>
                         </div>
                     </div>
@@ -529,131 +255,22 @@
             `;
         }
 
-        let currentLightboxIdx = 0;
-
-        function openLightbox(idx) {
-            currentLightboxIdx = idx;
-            const lightbox = document.getElementById('lightboxOverlay');
-            updateLightboxUI();
-            lightbox.classList.remove('hidden');
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightboxOverlay').classList.add('hidden');
-        }
-
-        function moveLightbox(dir) {
-            const max = activeGalleryImages.length;
-            currentLightboxIdx = (currentLightboxIdx + dir + max) % max;
-            updateLightboxUI();
-        }
-
-        function updateLightboxUI() {
-            const img = document.getElementById('lightboxImage');
-            const counter = document.getElementById('lightboxCounter');
-            const path = activeGalleryImages[currentLightboxIdx];
-            
-            img.style.opacity = '0';
-            img.style.transform = 'scale(0.95)';
-            
-            setTimeout(() => {
-                img.src = getFormattedImageUrl(path);
-                img.style.opacity = '1';
-                img.style.transform = 'scale(1)';
-                counter.innerText = `${(currentLightboxIdx + 1).toString().padStart(2, '0')} / ${activeGalleryImages.length.toString().padStart(2, '0')}`;
-            }, 200);
-        }
-
-        function moveSlide(dir) {
-            const track = document.getElementById('sliderTrack');
-            const slides = track.querySelectorAll('.slide');
-            const max = slides.length;
-            if (max <= 1) return;
-            currentSlideIndex = (currentSlideIndex + dir + max) % max;
-            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
-        }
-
-        function renderCatalog(items) {
-            const grid = document.getElementById('catalogGrid');
-            const empty = document.getElementById('emptyState');
-            const counter = document.getElementById('resultCount');
-            
-            counter.innerText = `${items.length} Tours Found`;
-
-            if (items.length === 0) {
-                grid.classList.add('hidden');
-                empty.classList.remove('hidden');
-                return;
-            }
-            empty.classList.add('hidden');
-            grid.classList.remove('hidden');
-            grid.innerHTML = items.map(item => `
-                <div class="info-card group" onclick="fetchDetail(${item.tourId}, ${item.contractId || 300})">
-                    <div class="card-image-container">
-                        <img src="${getFormattedImageUrl(item)}" class="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <div class="absolute top-5 left-5 z-10">
-                             ${formatTourType(item.cityTourType)}
-                        </div>
-                    </div>
-                    <div class="p-8 flex flex-col flex-grow">
-                        <div class="flex-grow">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="flex text-yellow-400 gap-0.5">
-                                    ${Array(5).fill('<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>').join('')}
-                                </div>
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">${item.rating || '5.0'} Experience</span>
-                            </div>
-                            <h2 class="text-2xl font-extrabold text-slate-900 mb-5 leading-tight group-hover:text-blue-600 transition-colors">${item.tourName}</h2>
-                            <div class="flex flex-wrap items-center gap-4">
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-xl">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    ${item.duration}
-                                </div>
-                                <div class="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-xl">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                    ${item.cityName}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between pt-8 border-t border-slate-50 mt-8">
-                            <span class="text-slate-900 font-black text-xs uppercase tracking-[0.2em]">View Details</span>
-                            <div class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-900 flex items-center justify-center transition-all group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-200 group-hover:translate-x-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function closeDetail() { 
-            document.getElementById('detailOverlay').classList.add('hidden'); 
-            document.body.style.overflow = 'auto';
-        }
-
         function setupSearch() {
             document.getElementById('searchInput').addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
-                const filtered = catalogData.filter(p => {
-                    const matchesSearch = (p.tourName || '').toLowerCase().includes(term) || (p.cityName || '').toLowerCase().includes(term);
-                    const matchesCategory = currentFilter === 'all' || p.cityTourType === currentFilter;
-                    return matchesSearch && matchesCategory;
-                });
-                renderCatalog(filtered);
+                const filtered = catalogData.filter(i => i.tourName.toLowerCase().includes(term));
+                renderGrid(filtered);
             });
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLightbox();
-                closeDetail();
-            }
-            if (!document.getElementById('lightboxOverlay').classList.contains('hidden')) {
-                if (e.key === 'ArrowRight') moveLightbox(1);
-                if (e.key === 'ArrowLeft') moveLightbox(-1);
-            }
-        });
+        function showError(msg) {
+            const status = document.getElementById('statusMessage');
+            status.innerText = msg;
+            status.className = "mb-8 p-4 rounded-2xl text-center font-bold bg-red-50 text-red-600 block";
+            document.getElementById('loadingState').classList.add('hidden');
+        }
+
+        function closeDetail() { document.getElementById('detailOverlay').classList.add('hidden'); }
     </script>
 </body>
 </html>
