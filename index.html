@@ -105,6 +105,10 @@
             transform: scale(1.03);
         }
 
+        #categoryFilter {
+    max-height: 70vh;
+    overflow-y: auto;
+}
         @media print {
             .no-print { display: none; }
             body { background: white; }
@@ -136,15 +140,26 @@
         </header>
 
         <!-- Category Filters -->
-        <div class="no-print mb-10">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tour Categories</h3>
-            <div class="category-flex-container" id="categoryFilter">
-                <button onclick="filterByCategory('all')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" data-category="all">
-                    All Tours
-                </button>
-            </div>
+       <div class="flex gap-10">
+    <!-- Left Sidebar: Categories -->
+    <aside class="w-64">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tour Categories</h3>
+        <div class="flex flex-col gap-3" id="categoryFilter">
+            <button onclick="filterByCategory('all')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" data-category="all">
+                All Tours
+            </button>
         </div>
+    </aside>
 
+    <!-- Right Content: Grid -->
+    <div class="flex-1">
+        <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10"></div>
+        <div id="emptyState" class="hidden py-32 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200">
+            <p class="text-slate-500 font-bold text-xl mb-2">No matches found</p>
+            <p class="text-slate-400">Try adjusting your search or category selection.</p>
+        </div>
+    </div>
+</div>
         <!-- Loading State -->
         <div id="loadingState" class="py-32 text-center">
             <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
