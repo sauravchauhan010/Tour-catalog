@@ -119,29 +119,31 @@
 
     <div class="catalog-container">
         <!-- Modern Header -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-            <div>
-                <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">Tour cataloge</h1>
-                <p class="text-slate-500 font-medium text-lg">Rayna B2B</p>
+        <header class="sticky top-0 z-50 bg-white shadow-md">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 p-6">
+        <div>
+            <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">Tour Catalog</h1>
+            <p class="text-slate-500 font-medium text-lg">Rayna B2B</p>
+        </div>
+        
+        <div class="flex items-center gap-3 bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 w-full md:w-auto">
+            <div class="pl-3 text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
-            
-            <div class="no-print flex items-center gap-3 bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 w-full md:w-auto">
-                <div class="pl-3 text-slate-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    placeholder="Search by tour name..." 
-                    class="bg-transparent px-2 py-2 text-base outline-none w-full md:w-80 font-medium"
-                >
-            </div>
-        </header>
+            <input 
+                type="text" 
+                id="searchInput"
+                placeholder="Search by tour name..." 
+                class="bg-transparent px-2 py-2 text-base outline-none w-full md:w-80 font-medium"
+            >
+        </div>
+    </div>
+</header>
 
         <!-- Category Filters -->
        <div class="flex gap-10">
     <!-- Left Sidebar: Categories -->
-   <aside class="w-64 sticky top-20">
+ <aside class="w-64 sticky top-[calc(6rem+1rem)] self-start">
     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tour Categories</h3>
     <div class="flex flex-col gap-3" id="categoryFilter">
         <button onclick="filterByCategory('all')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" data-category="all">
@@ -149,10 +151,16 @@
         </button>
     </div>
 </aside>
-
     <!-- Right Content: Grid -->
-    <div class="flex-1">
-        <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10"></div>
+<div class="flex gap-10 max-w-[1800px] mx-auto px-8">
+    <!-- Sticky Categories -->
+    <aside class="w-64 sticky top-[calc(6rem+1rem)] self-start">
+        ...category buttons...
+    </aside>
+
+    <!-- Main Catalog Grid -->
+    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div id="catalogGrid"></div>
         <div id="emptyState" class="hidden py-32 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200">
             <p class="text-slate-500 font-bold text-xl mb-2">No matches found</p>
             <p class="text-slate-400">Try adjusting your search or category selection.</p>
@@ -600,4 +608,5 @@
     </script>
 </body>
 </html>
+
 
