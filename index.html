@@ -20,12 +20,11 @@
             color: #1e293b;
         }
 
-        .catalog-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2.5rem 1.5rem;
-        }
-
+      .catalog-container {
+    max-width: 1800px;  /* bigger width */
+    margin: 0 auto;
+    padding: 3rem 2rem; /* more spacing */
+}
         .category-flex-container {
             display: flex;
             flex-wrap: wrap;
@@ -142,14 +141,14 @@
         <!-- Category Filters -->
        <div class="flex gap-10">
     <!-- Left Sidebar: Categories -->
-    <aside class="w-64">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tour Categories</h3>
-        <div class="flex flex-col gap-3" id="categoryFilter">
-            <button onclick="filterByCategory('all')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" data-category="all">
-                All Tours
-            </button>
-        </div>
-    </aside>
+   <aside class="w-64 sticky top-20">
+    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tour Categories</h3>
+    <div class="flex flex-col gap-3" id="categoryFilter">
+        <button onclick="filterByCategory('all')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all bg-slate-900 text-white shadow-md border border-slate-900" data-category="all">
+            All Tours
+        </button>
+    </div>
+</aside>
 
     <!-- Right Content: Grid -->
     <div class="flex-1">
@@ -601,3 +600,4 @@
     </script>
 </body>
 </html>
+
