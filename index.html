@@ -197,7 +197,7 @@
         const LIST_ENDPOINT = '/api/Tour/tourstaticdata';
         const DETAIL_ENDPOINT = '/api/Tour/tourStaticDataById';
         const OPTIONS_ENDPOINT = '/api/Tour/touroptionstaticdata';
-        const authToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTJlOGU0ZS0zOGQ3LTRjOGMtYjc4YS03MjE4ZWQ0NmFhODIiLCJVc2VySWQiOiI1NDkyMiIsIlVzZXJUeXBlIjoiQWdlbnQiLCJQYXJlbnRJRCI6IjAiLCJFbWFpbElEIjoiYW1pcmo0ampAZ21haWwuY29tIiwiaXNzIjoiaHR0cDovL2RldnJheW5hYXBpLnJheW5hdG91cnMuY29tLyIsImF1ZCI6Imh0dHA6Ly9kZXZyYXluYWFwaS5yYXluYXRvdXJzLmNvbS8ifQ.2GIkNbQ6RO0JZkRPHpLZyUqkNivXlcI1OKSjMs76ufc";
+       
 
         const COUNTRY_ID = 13063;
         const CITY_ID = 13668;
@@ -241,24 +241,32 @@
             return finalUrl;
         }
 
-        async function fetchCatalog() {
-            try {
-                const proxyUrl = 'https://corsproxy.io/?';
-                const targetUrl = `${BASE_URL}${LIST_ENDPOINT}`;
-                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-                    body: JSON.stringify({ countryId: COUNTRY_ID, cityId: CITY_ID })
-                });
-                const result = await response.json();
-                catalogData = result.data || result.result || [];
-                generateCategoryFilters(catalogData);
-                renderCatalog(catalogData);
-                document.getElementById('loadingState').classList.add('hidden');
-            } catch (error) {
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">Failed to load catalog.</p>`;
-            }
-        }
+      async function fetchCatalog() {
+    try {
+        const response = await fetch("/.netlify/functions/rayna", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                endpoint: "/api/Tour/tourstaticdata",
+                payload: {
+                    countryId: COUNTRY_ID,
+                    cityId: CITY_ID
+                }
+            })
+        });
+
+        const result = await response.json();
+
+        catalogData = result.data || result.result || [];
+        generateCategoryFilters(catalogData);
+        renderCatalog(catalogData);
+        document.getElementById('loadingState').classList.add('hidden');
+
+    } catch (error) {
+        document.getElementById('loadingState').innerHTML =
+            `<p class="text-red-500 font-bold">Failed to load catalog.</p>`;
+    }
+}
 
         function generateCategoryFilters(data) {
             const categories = [...new Set(data.map(item => item.cityTourType).filter(Boolean))];
